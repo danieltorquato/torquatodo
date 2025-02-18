@@ -92,7 +92,10 @@
             const taskContent = document.createElement('span');
             taskContent.textContent = taskText;
 
+            const editButton = document.createElement('button');
             const completeButton = document.createElement('button');
+           editButton.classList.add('btn', 'btn-link');
+           editButton.textContent = 'Editar'; 
             completeButton.classList.add('btn', 'btn-link');
             completeButton.textContent = 'Concluir';
             completeButton.onclick = () => {

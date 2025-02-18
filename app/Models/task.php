@@ -1,15 +1,15 @@
 <?php
-Class Task
-{
-    private $task;
-    public $title;
-    public $description;
-    public function __construct(){
-        $this->task = new Task();
+class Task {
+
+    private $table;
+    private $task_date;
+    public function __construct($db) {
+ 
+    }
+    
+    public function getTable() {
+        return $this->table;
     }
 
-public function getTask(){
-    return $this->task;
-}
 }
 ?>

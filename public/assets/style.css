@@ -124,3 +124,45 @@ body {
 .slider-image.active {
     opacity: 1;
 }
+.botao-caderno {
+    font-size: 18px;
+    background-color: #fdf6e3;
+    border: 2px solid #ccc;
+    border-radius: 10px;
+    padding: 10px 15px;
+    display: block;
+    width: fit-content;
+    margin: 10px auto;
+    cursor: pointer;
+
+    transition: 0.3s;
+    box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+.botao-caderno:hover {
+    background-color: #f5e3c9;
+}
+.header-date{
+    display: flex;
+    flex-direction: row;
+}
+    /* Estilo do fundo do input e botão */
+    .caderno-date{
+  
+        font-size: 20px;
+        background: transparent;
+        background-size: 100% 2rem;
+       border: none;
+        padding: 10px;
+        width: 100%;
+        max-width: 250px;
+        display: block;
+        margin: 10px auto;
+        outline: none;
+    }
+
+    /* Efeito de escrita à mão */
+    .caderno::placeholder {
+        color: rgba(0, 0, 0, 0.6);
+        font-style: italic;
+    }
