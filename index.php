@@ -1,7 +1,8 @@
 <?php
 require_once 'app/Controllers/taskController.php';
 $tasks = new TaskController();
-$task = $tasks->getTasks();
+$task = $tasks->getTasks() ?? [];
+
 ?>
 <!DOCTYPE html>
 <html lang="pt-br">
@@ -24,33 +25,52 @@ $task = $tasks->getTasks();
 
     <div class="container">
 
-    
-            <div class="notebook">
-                <span class="float-right font-weight-bold currentDate" style="float:right" id="currentDate"></span>
-             <form action="app/Controllers/taskController.php" method="post">
-                    <div id="taskList">
-                    <?php
-        foreach ($task as $tasks):
-            ?> <span class="task" name="<?= $tasks['id'] ?>"> <button type="submit" class="btn btn-link"><i class="fa-regular fa-circle-check"></i></button>
-                             <input type="text" name="<?= $tasks['id'] ?>" id="" value="<?= $tasks['description'] ?>" readonly> <button class="btn btn-link"><i
-                                    class="fa-regular fa-pen-to-square"></i></button> <button class="btn btn-link"><i
-                                    class="fa-regular fa-trash-can"></i></button></span>
-                                     <?php endforeach; ?>
-                    </div>
-             </form>
 
-                <form action="app/Controllers/taskController.php" method="post" class="task-form">
-                    <div class="control-buttons">
-                        <input type="text" id="taskInput" class="form-control mb-2" placeholder="Digite sua tarefa..."
-                            oninput="toggleAddCancelButtons(this)" name="description">
-                        <button type="submit" class="btn btn-success" id="addButton"><i
-                                class="fa-solid fa-plus"></i></button>
-                        <button type="reset" class="btn btn-danger" id="cancelButton" onclick="clearInput()"><i
-                                class="fa-solid fa-xmark"></i></button>
-                    </div>
-                </form>
+        <div class="notebook">
+            <span class="float-right font-weight-bold currentDate" style="float:right" id="currentDate"></span>
+
+            <div id="taskList">
+                <?php
+                foreach ($task as $tasks):
+                    ?> <span class="task">
+                        <?php if($tasks['completed' ] == 0):?>    
+                        <form action="app/routes/taskRoutes.php?action=complete" method="post">
+                        <button type="submit"
+                                class="btn btn-link" name="taskId" value="<?= $tasks['id'] ?>"><i
+                                    class="fa-regular fa-circle-check"></i></button></form>
+                                       
+                                    
+                                    
+                                        <?= $tasks['description']  ?>
+                                   
+                       
+                            <button class="btn btn-link"><i class="fa-regular fa-pen-to-square"></i></button>
+                            <button type="button" class="btn btn-link" name="taskId" value="<?= $tasks['id'] ?>" onclick="deleteTask(<?= $tasks['id'] ?>)"><i class="fa-regular fa-trash-can"></i></button>
+                       
+                        <form id="deleteTaskForm" action="app/routes/taskRoutes.php?action=delete" method="post" style="display: none;">
+    <input type="hidden" name="taskId" id="deleteTaskId">
+</form>
+                        <?php elseif($tasks['completed'] == 1):?>
+                                        <p class="completed"><?= $tasks['description']  ?></p>
+                                       <?php endif ?>
+                    </span>
+                   
+                <?php endforeach; ?>
             </div>
-       
+
+
+            <form action="app/routes/taskRoutes.php?action=add" method="post" class="task-form">
+                <div class="control-buttons">
+                    <input type="text" id="taskInput" class="form-control mb-2" placeholder="Digite sua tarefa..."
+                        oninput="toggleAddCancelButtons(this)" name="description" autofocus>
+                    <button type="submit" class="btn btn-success" id="addButton"><i
+                            class="fa-solid fa-plus"></i></button>
+                    <button type="reset" class="btn btn-danger" id="cancelButton" onclick="clearInput()"><i
+                            class="fa-solid fa-xmark"></i></button>
+                </div>
+            </form>
+        </div>
+
         <div class="text-center mt-3">
             <button class="btn btn-light">⬅</button>
             <button class="btn btn-light">➡</button>
@@ -93,6 +113,12 @@ $task = $tasks->getTasks();
     </div>
 
     <script>
+            function deleteTask(taskId) {
+        if (confirm('Tem certeza de que deseja deletar esta tarefa?')) {
+            document.getElementById('deleteTaskId').value = taskId;
+            document.getElementById('deleteTaskForm').submit();
+        }
+    }
         document.getElementById('currentDate').innerText = new Date().toLocaleDateString();
 
         const taskList = document.getElementById('taskList');

@@ -19,15 +19,19 @@ class TaskController {
 
     public function getTasks() {
 
-       
-        $query = 'SELECT * FROM tasks';
+       $user = 2;
+        $query = 'SELECT * FROM tasks WHERE user_id=?';
         $find = $this->pdo->prepare($query);
-        $find->execute();
+        $find->execute([
+            $user
+        ]);
         if ($find->rowCount() > 0) {
             $this->task = $find->fetchAll(PDO::FETCH_ASSOC);
             return $this->task;
         }else{
-            echo 'Nenhuma tarefa encontrada';
+          
+            return $this->task;
+           
         }
        
     }
@@ -36,7 +40,7 @@ class TaskController {
     if($description){
         try {
             $this->pdo->beginTransaction();
-           $query = $this->pdo->prepare('INSERT INTO tasks (user_id, description, completed, created_at, completed_at, task_date ) VALUES (1, ?,1, NOW(), NOW(), NOW())');
+           $query = $this->pdo->prepare('INSERT INTO tasks (user_id, description, completed, created_at, completed_at, task_date ) VALUES (2, ?,0, NOW(), NOW(), NOW())');
            $query->execute([
         $description
            ]);
@@ -50,9 +54,38 @@ class TaskController {
       
     }
 }
-    
+    public function completedTask(){
+        $taskId = filter_input(INPUT_POST, 'taskId', FILTER_SANITIZE_NUMBER_INT);
+        if($taskId){
+            try {
+                $this->pdo->beginTransaction();
+            $query = $this->pdo->prepare('UPDATE tasks SET completed = 1 WHERE id=?');
+            $query->execute([
+                $taskId
+            ]);
+            $this->pdo->commit();
+            } catch (Exception $e) {
+                $this->pdo->rollBack();
+                echo 'Erro ao completar tarefa: ' . $e->getMessage();
+            }
+            
+        }
+    }
+    public function deleteTask(){
+        $taskId = filter_input(INPUT_POST, 'taskId', FILTER_SANITIZE_NUMBER_INT);
+        if($taskId){
+            try {
+                $this->pdo->beginTransaction();
+                $query = $this->pdo->prepare("DELETE FROM tasks WHERE id=? ");
+                $query->execute([
+                    $taskId
+                ]);
+                $this->pdo->commit();
+            } catch (Exception $e) {
+                echo 'Erro ao deletar :' . $e->getMessage();
+            }
+        }
+    }
 }
-$task = new TaskController();
-$task->addTask();
 
 ?>
