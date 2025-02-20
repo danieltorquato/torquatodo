@@ -1,9 +1,9 @@
 <?php
 class Db {
-    private $host = '';
-    private $dbname = '';
-    private $username = '';
-    private $password = '!';
+    private $host = 'localhost';
+    private $dbname = 'agenda';
+    private $username = 'root';
+    private $password = 'Daaniell992312!';
     private $pdo;
 
     public function __construct() {

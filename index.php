@@ -2,7 +2,7 @@
 require_once 'app/Controllers/taskController.php';
 $tasks = new TaskController();
 $task = $tasks->getTasks() ?? [];
-
+$task_date = $tasks->getTaskDate();
 ?>
 <!DOCTYPE html>
 <html lang="pt-br">
@@ -10,51 +10,70 @@ $task = $tasks->getTasks() ?? [];
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Agenda Caderno</title>
+    <title>Agenda</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link
-        href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400..700&family=Petit+Formal+Script&display=swap"
-        rel="stylesheet">
-
     <link rel="stylesheet" href="public/assets/style.css">
+
 </head>
 
 <body>
 
     <div class="container">
 
-
         <div class="notebook">
-            <span class="float-right font-weight-bold currentDate" style="float:right" id="currentDate"></span>
+           
+           <div class="header row">
 
+                 <div class="col title-name mx-1">
+                     <h4 class="mb-0 "><?$task_date?> <!--aqui vai ser o nome-->Ariane </h4>
+                     <p class="mt-0 ms-2" >Agenda</p>
+                 </div>
+
+               <div class="col"> <input type="date" class="form-control font-weight-bold currentDate " id="currentDate" value="<?= $task_date?>" style="float:right"></div>
+              
+           </div>
             <div id="taskList">
                 <?php
                 foreach ($task as $tasks):
-                    ?> <span class="task">
-                        <?php if($tasks['completed' ] == 0):?>    
-                        <form action="app/routes/taskRoutes.php?action=complete" method="post">
-                        <button type="submit"
-                                class="btn btn-link" name="taskId" value="<?= $tasks['id'] ?>"><i
-                                    class="fa-regular fa-circle-check"></i></button></form>
-                                       
-                                    
-                                    
-                                        <?= $tasks['description']  ?>
-                                   
-                       
-                            <button class="btn btn-link"><i class="fa-regular fa-pen-to-square"></i></button>
-                            <button type="button" class="btn btn-link" name="taskId" value="<?= $tasks['id'] ?>" onclick="deleteTask(<?= $tasks['id'] ?>)"><i class="fa-regular fa-trash-can"></i></button>
-                       
-                        <form id="deleteTaskForm" action="app/routes/taskRoutes.php?action=delete" method="post" style="display: none;">
-    <input type="hidden" name="taskId" id="deleteTaskId">
+                    ?> <span class="task gap-0">
+                        <?php if ($tasks['completed'] == 0): ?>
+                            <form action="app/routes/taskRoutes.php?action=complete" method="post">
+                                <button type="submit" class="btn btn-link me-4" name="taskId" value="<?= $tasks['id'] ?>"><i
+                                        class="fa-regular fa-circle-check"></i></button>
+                            </form>
+
+
+                            <div class="task-description-data d-flex align-items-center">
+
+
+                            <form action="app/routes/taskRoutes.php?action=update" method="POST" id="edit-form-<?= $tasks['id'] ?>" style="display:none">
+    <span class="task-description-edit d-flex align-items-start" >
+        <input type="text" class="form-control-plaintext w-100 flex-grow-1 ms-0 me-0" value="<?= $tasks['description'] ?>" name="edit-text">
+        <input type="hidden" name="taskId" value="<?= $tasks['id'] ?>">
+        <button type="submit" class="btn btn-success rounded-circle ms-2">
+            <i class="fa-solid fa-check"></i>
+        </button>
+    </span>
 </form>
-                        <?php elseif($tasks['completed'] == 1):?>
-                                        <p class="completed"><?= $tasks['description']  ?></p>
-                                       <?php endif ?>
+
+                                <span class="task-description-text" id="task-description-<?= $tasks['id'] ?>"><?= $tasks['description'] ?></span>
+                            </div>
+
+
+                            <button class="btn btn-link ms-3" id="btn-edit-task-<?= $tasks['id']?> btn-link-edit-task" onclick="editTask(<?= $tasks['id']?>)"><i class="fa-regular fa-pen-to-square"></i></button>
+
+                            <button type="button" class="btn btn-link ms-2" name="taskId" value="<?= $tasks['id'] ?>"
+                                onclick="deleteTask(<?= $tasks['id'] ?>)"><i class="fa-regular fa-trash-can"></i></button>
+
+                            <form id="deleteTaskForm" action="app/routes/taskRoutes.php?action=delete" method="post"
+                                style="display: none;">
+                                <input type="hidden" name="taskId" id="deleteTaskId">
+                            </form>
+                        <?php elseif ($tasks['completed'] == 1): ?>
+                            <p class="completed"><?= $tasks['description'] ?></p>
+                        <?php endif ?>
                     </span>
-                   
+
                 <?php endforeach; ?>
             </div>
 
@@ -75,7 +94,7 @@ $task = $tasks->getTasks() ?? [];
             <button class="btn btn-light">⬅</button>
             <button class="btn btn-light">➡</button>
         </div>
-        <div class="header">
+        <div class="bottom">
             <button class="btn btn-danger stress-button-danger" onclick="openPopup()">😤 Botão do Estresse</button>
 
             <div for="humor">
@@ -113,19 +132,31 @@ $task = $tasks->getTasks() ?? [];
     </div>
 
     <script>
-            function deleteTask(taskId) {
-        if (confirm('Tem certeza de que deseja deletar esta tarefa?')) {
-            document.getElementById('deleteTaskId').value = taskId;
-            document.getElementById('deleteTaskForm').submit();
-        }
-    }
-        document.getElementById('currentDate').innerText = new Date().toLocaleDateString();
+
+        document.getElementById('selectedDate').value = new Date();
 
         const taskList = document.getElementById('taskList');
         const taskInput = document.getElementById('taskInput');
         const addButton = document.getElementById('addButton');
         const cancelButton = document.getElementById('cancelButton');
 
+        function editTask(taskId) {
+ 
+    const taskText = document.getElementById('task-description-' + taskId);
+    const editForm = document.getElementById('edit-form-' + taskId);
+        
+    if (taskText.style.display === 'none') {
+        
+        taskText.style.display = 'block';
+     
+        editForm.style.display = 'none';
+    } else {
+        
+        taskText.style.display = 'none';
+       
+        editForm.style.display = 'block';
+    }
+}
         toggleAddCancelButtons = (input) => {
             const isNotEmpty = input.value.trim().length > 0;
             addButton.style.display = isNotEmpty ? 'inline-block' : 'none';
@@ -137,6 +168,12 @@ $task = $tasks->getTasks() ?? [];
             toggleAddCancelButtons(taskInput);
         }
 
+        function deleteTask(taskId) {
+            if (confirm('Tem certeza de que deseja deletar esta tarefa?')) {
+                document.getElementById('deleteTaskId').value = taskId;
+                document.getElementById('deleteTaskForm').submit();
+            }
+        }
 
         function openPopup() {
             document.getElementById('stressPopup').style.display = 'block';

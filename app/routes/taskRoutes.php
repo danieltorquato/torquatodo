@@ -1,5 +1,5 @@
 <?php
-require_once __DIR__ . '/../Controllers/TaskController.php';
+require_once '../Controllers/taskController.php';
 
 $task = new TaskController();
 
@@ -29,7 +29,13 @@ switch ($action) {
             echo json_encode(["error" => "Método não permitido"]);
         }
         break;
-
+        case 'update': 
+            if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+                $task->editTask();
+            } else {
+                echo json_encode(["error" => "Método não permitido"]);
+            }
+            break;
     default:
         echo json_encode(["error" => "Ação inválida"]);
 }

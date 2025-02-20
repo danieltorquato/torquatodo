@@ -1,6 +1,7 @@
 body {
     background-color: #f0e68c;
-    font-family: 'Indie Flower', cursive;
+    font-family: Arial, Helvetica, sans-serif !important;
+    
 }
 .notebook {
     margin: 20px auto;
@@ -11,11 +12,14 @@ body {
     max-width: 500px;
     box-shadow: 0 0 10px rgba(0,0,0,0.1);
     position: relative;
-  
+    font-family: 'Indie Flower' !important;
+    transform: scale(0.9);
 }
 .currentDate{
     text-decoration: underline;
     margin-bottom: 10px;
+    float: right;
+    max-width: fit-content;
 }
 .task {
     display: flex;
@@ -27,7 +31,7 @@ body {
    gap: 15px;
    
 }
-#taskInput, #taskList{ font-family: "Petit Formal Script", serif;
+#taskInput, #taskList{ 
     font-weight: 600;
     font-style: normal;
     text-wrap: wrap;
@@ -48,13 +52,16 @@ body {
     gap: 0px;
     padding: 0px;
 }
+.btn-edit:hover{
+transform: scale(1.1);
+}
 .hidden {
     visibility: hidden;
 }   
 .none{
     display: none;
 }
-.header {
+.bottom {
     text-align: center;
     margin-bottom: 20px;
 }

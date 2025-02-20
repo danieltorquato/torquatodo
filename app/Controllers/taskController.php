@@ -4,17 +4,18 @@ require_once __DIR__ . '/../Models/task.php';
 
 class TaskController {
     private $table;
-    private $task_date;
+    private $task_date ;
     public $task;
     private $pdo;
 
     public $id;
     public function __construct() {
         $db = new Db();
-        $task = new Task($this->table, $this->task_date, $this->task);
+        $task = new Task($this->table, $this->task_date , $this->task);
     $this->pdo = $db->getConnection();
     $this->task = $task->getTask();
     $this->table = $task->getTable();
+    $this->task_date = date("Y-m-d");
     }
 
     public function getTasks() {
@@ -35,6 +36,9 @@ class TaskController {
         }
        
     }
+    public function getTaskDate() {
+        return $this->task_date;
+    }
    public function addTask() {
     $description = filter_input(INPUT_POST, 'description', FILTER_SANITIZE_STRING);
     if($description){
@@ -54,6 +58,28 @@ class TaskController {
       
     }
 }
+public function editTask(){
+    $taskEdit = filter_input(INPUT_POST, 'edit-text');
+    $taskId = filter_input(INPUT_POST, 'taskId', FILTER_SANITIZE_NUMBER_INT);
+    var_dump($taskEdit, $taskId);  // Adicione essa linha para verificar os dados recebidos
+
+    if($taskId){
+        try {
+            $this->pdo->beginTransaction();
+            $query= $this->pdo->prepare('UPDATE tasks SET description=? WHERE id=?');
+            $query->execute([
+                $taskEdit,
+                $taskId
+            ]);
+            $this->pdo->commit();
+            echo "Cadastro atualizado com sucesso!";
+            header("Location: ../../index.php");
+        } catch (Exception $e) {
+            $this->pdo->rollBack();
+            echo 'Não foi possível atualizar: ' . $e->getMessage();
+        }
+    }
+}
     public function completedTask(){
         $taskId = filter_input(INPUT_POST, 'taskId', FILTER_SANITIZE_NUMBER_INT);
         if($taskId){
@@ -64,6 +90,7 @@ class TaskController {
                 $taskId
             ]);
             $this->pdo->commit();
+            header("Location: ../../index.php");
             } catch (Exception $e) {
                 $this->pdo->rollBack();
                 echo 'Erro ao completar tarefa: ' . $e->getMessage();
@@ -81,11 +108,13 @@ class TaskController {
                     $taskId
                 ]);
                 $this->pdo->commit();
+                header("Location: ../../index.php");
             } catch (Exception $e) {
                 echo 'Erro ao deletar :' . $e->getMessage();
             }
         }
     }
+ 
 }
 
 ?>
