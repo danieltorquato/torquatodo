@@ -1,8 +1,8 @@
 <?php
 class Db {
-    private $host = '108.179.193.9';
-    private $dbname = 'torqua66_agenda';
-    private $username = 'torqua66_daniel';
+    private $host = 'localhost';
+    private $dbname = 'agenda';
+    private $username = 'root';
     private $password = 'Daaniell992312!';
     private $pdo;
 
