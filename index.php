@@ -1,8 +1,9 @@
 <?php
 require_once 'app/Controllers/taskController.php';
 $tasks = new TaskController();
-$task = $tasks->getTasks() ?? [];
 $task_date = $tasks->getTaskDate();
+$task = $tasks->getTasks($task_date) ?? [];
+
 ?>
 <!DOCTYPE html>
 <html lang="pt-br">
@@ -29,7 +30,9 @@ $task_date = $tasks->getTaskDate();
                      <p class="mt-0 ms-2" >Agenda</p>
                  </div>
 
-               <div class="col"> <input type="date" class="form-control font-weight-bold currentDate " id="currentDate" value="<?= $task_date?>" style="float:right"></div>
+               <div class="col"> <input type="date" class="form-control font-weight-bold currentDate " id="currentDate" value="<?= $task_date?>" style="float:right">
+
+               </div>
               
            </div>
             <div id="taskList">
@@ -90,10 +93,6 @@ $task_date = $tasks->getTaskDate();
             </form>
         </div>
 
-        <div class="text-center mt-3">
-            <button class="btn btn-light">⬅</button>
-            <button class="btn btn-light">➡</button>
-        </div>
         <div class="bottom">
             <button class="btn btn-danger stress-button-danger" onclick="openPopup()">😤 Botão do Estresse</button>
 
@@ -133,7 +132,28 @@ $task_date = $tasks->getTaskDate();
 
     <script>
 
-        document.getElementById('selectedDate').value = new Date();
+       
+       
+document.getElementById("currentDate").addEventListener("change", function() {
+    let selectedDate = this.value; // Captura a data selecionada
+    console.log("Data selecionada:", selectedDate);
+    fetch("app/routes/taskRoutes.php?action=read", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ selectedDate: selectedDate })  // Passa a data no corpo da requisição
+    })
+    .then(response => response.json())  // Converte a resposta para JSON
+    .then(data => {
+        console.log('Tarefas recebidas:', data);  // Exibe as tarefas recebidas
+    })
+    .catch(error => {
+        console.error('Erro ao buscar as tarefas:', error);  // Exibe o erro no console
+    });
+});
+
+
 
         const taskList = document.getElementById('taskList');
         const taskInput = document.getElementById('taskInput');

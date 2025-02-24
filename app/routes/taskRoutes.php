@@ -1,42 +1,63 @@
 <?php
-require_once '../Controllers/taskController.php';
+require_once __DIR__ . '/../Controllers/taskController.php';
 
-$task = new TaskController();
+class TaskRouter {
+    private $taskController;
 
-$action = $_GET['action'] ?? null;
+    public $data;
+    public function __construct() {
+       
+        $action = $_GET['action'] ?? null;
 
-switch ($action) {
-    
-    case 'add': // Adicionar uma nova tarefa
-        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            $task->addTask();
-        } else {
-            echo json_encode(["error" => "Método não permitido"]);
+        switch ($action) {
+            case 'read': // Ler as tarefas
+                if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+                    
+                    $input = file_get_contents("php://input");
+                    $this->data = json_decode($input, true);
+                    header("Location: ../../index.php");
+                   
+                } else {
+                    echo json_encode(["error" => "Método não permitido"]);
+                }
+                break;
+            case 'add': // Adicionar uma nova tarefa
+                if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+                    $this->taskController->addTask();
+                } else {
+                    echo json_encode(["error" => "Método não permitido"]);
+                }
+                break;
+            case 'complete': // Marcar tarefa como concluída
+                if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+                    $this->taskController->completedTask();
+                } else {
+                    echo json_encode(["error" => "Método não permitido"]);
+                }
+                break;
+            case 'delete': // Deletar tarefa
+                if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+                    $this->taskController->deleteTask();
+                } else {
+                    echo json_encode(["error" => "Método não permitido"]);
+                }
+                break;
+            case 'update': // Atualizar tarefa
+                if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+                    $this->taskController->editTask();
+                } else {
+                    echo json_encode(["error" => "Método não permitido"]);
+                }
+                break;
+            default:
+                echo json_encode(["error" => "Ação inválida"]);
         }
-        break;
+    }
 
-    case 'complete': // Marcar tarefa como concluída
-        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            $task->completedTask();
-        } else {
-            echo json_encode(["error" => "Método não permitido"]);
-        }
-        break;
-    case 'delete': // Marcar tarefa como concluída
-        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            $task->deleteTask();
-        } else {
-            echo json_encode(["error" => "Método não permitido"]);
-        }
-        break;
-        case 'update': 
-            if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-                $task->editTask();
-            } else {
-                echo json_encode(["error" => "Método não permitido"]);
-            }
-            break;
-    default:
-        echo json_encode(["error" => "Ação inválida"]);
+       
+        public function getTaskDate() {
+        return $this->data;
+    }
 }
+
 ?>
