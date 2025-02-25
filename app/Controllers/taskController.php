@@ -4,75 +4,65 @@ require_once __DIR__ . '/../Models/task.php';
 require_once __DIR__ . '/../routes/taskRoutes.php';
 ini_set('display_errors', 1);
 error_reporting(E_ALL);
-  
+
+
 class TaskController {
     private $table;
-    private $task_date;
+    public $task_date;
     public $task;
     private $pdo;
     public $id;
     public $input;
- 
-    public function __construct($data) {
+ public $user;
+
+public $selectedDate;
+public $task_date_test;
+    public function __construct() {
         $db = new Db();
-        $task = new Task($this->table, $this->task_date, $this->task);
+        $task = new Task($this->table, $this->task_date, $this->task, 2);
         $this->pdo = $db->getConnection();
         $this->task = $task->getTask();
         $this->table = $task->getTable();
         $this->task_date = $task->getTaskDate();
+        $this->user = $task->getUser();
+        $this->task_date_test = date('Y-m-d');
        
-        $this->getTasks($data);
     }
 
-    public function getTasks($data) {
-        $router = new TaskRouter();
-        $data= $router->getTaskDate();
-        if ($data === null) {
-            error_log("Erro ao decodificar o JSON: " . json_last_error_msg());
-       
+    public function getTasks($user, $selectedDate) {
+              
+        $query = 'SELECT * FROM tasks WHERE user_id=? AND task_date=?';
+        $find = $this->pdo->prepare($query);
+        $find->execute([
+            $user,
+            $selectedDate
+        ]);
+        if ($find->rowCount() > 0) {
+            $this->task = $find->fetchAll(PDO::FETCH_ASSOC);
+            return $this->task;
+        }else{
+          
+            return $this->task = [];
         }
-
-        // Verifica se a data foi recebida no corpo da requisição
-        $selectedDate = $data['selectedDate'] ?? null;
-        error_log("Data selecionada: " . $selectedDate); // Adiciona esta linha para verificar o valor de $selectedDate
-
-     
-
-        // if ($selectedDate != null) {
-        //     // Converte a data para o formato Y-m-d para a consulta
-        //     $this->task_date = $selectedDate;
-
-        //     // Prepara a consulta
-        //     $user = 2;
-        //     $query = 'SELECT * FROM tasks WHERE user_id=? AND task_date=?';
-        //     $find = $this->pdo->prepare($query);
-        //     $find->execute([$user, $this->task_date]);
-
-        //     if ($find->rowCount() > 0) {
-        //         $this->task = $find->fetchAll(PDO::FETCH_ASSOC);
-        //         echo json_encode($this->task);  // Retorna as tarefas como JSON
-        //     } else {
-        //         echo json_encode([]);  // Retorna um array vazio caso não haja tarefas
-        //     }
-        // } else {
-        //     echo json_encode(['error' => 'Data não fornecida']);  // Retorna um erro caso a data não seja fornecida
-        // }
     }
+    
     
 
     public function getTaskDate()
     {
         return $this->task_date;
     }
-    public function addTask()
+    public function addTask($taskDate)
     {
+        $taskDate = $_POST['date'];
         $description = filter_input(INPUT_POST, 'description', FILTER_SANITIZE_STRING);
         if ($description) {
             try {
                 $this->pdo->beginTransaction();
-                $query = $this->pdo->prepare('INSERT INTO tasks (user_id, description, completed, created_at, completed_at, task_date ) VALUES (2, ?,0, NOW(), NOW(), NOW())');
+                $query = $this->pdo->prepare('INSERT INTO tasks (user_id, description, completed, created_at, completed_at, task_date ) VALUES (2, ?,0, NOW(), NOW(), ?)');
                 $query->execute([
-                    $description
+                    $description,
+                    $taskDate
                 ]);
                 $this->pdo->commit();
                 echo "Cadastro realizado com sucesso!";
@@ -145,5 +135,8 @@ class TaskController {
     }
 
 }
-
+$tasks = new TaskController();
+// $selectedDate = filter_input(INPUT_POST, 'currentDate', FILTER_SANITIZE_STRING);
+// $tasksList = $tasks->getTasks(2, '2025-02-25');
+// var_dump($tasksList);
 ?>
