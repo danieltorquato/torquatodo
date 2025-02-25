@@ -54,7 +54,8 @@ public $task_date_test;
     }
     public function addTask($taskDate)
     {
-        $taskDate = $_POST['date'];
+        $taskDate = $_GET['date'];
+        $this->task_date = $taskDate;
         $description = filter_input(INPUT_POST, 'description', FILTER_SANITIZE_STRING);
         if ($description) {
             try {
