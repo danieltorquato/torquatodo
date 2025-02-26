@@ -52,11 +52,9 @@ public $task_date_test;
     {
         return $this->task_date;
     }
-    public function addTask($taskDate)
+    public function addTask($taskDate, $description)
     {
-        $taskDate = $_GET['date'];
-        $this->task_date = $taskDate;
-        $description = filter_input(INPUT_POST, 'description', FILTER_SANITIZE_STRING);
+      
         if ($description) {
             try {
                 $this->pdo->beginTransaction();
@@ -66,8 +64,9 @@ public $task_date_test;
                     $taskDate
                 ]);
                 $this->pdo->commit();
+                header("Location: ../../index.php?date=" . $taskDate); // Redireciona para a data correta
+
                 echo "Cadastro realizado com sucesso!";
-                header("Location: ../../index.php");
             } catch (Exception $e) {
                 $this->pdo->rollBack();
                 echo "Erro ao cadastrar usuário: " . $e->getMessage();

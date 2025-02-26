@@ -29,7 +29,7 @@ $task = $tasks->getTasks(2, $_GET['date'] ?? date('Y-m-d'));
            <div class="header row">
 
                  <div class="col title-name mx-1">
-                     <h4 class="mb-0 "><?$task_date?> <!--aqui vai ser o nome-->Ariane </h4>
+                 <h4 class="mb-0"><?= $_GET['date'] ?? date('d-m-Y') ?> <!-- Aqui vai ser o nome --></h4>
                      <p class="mt-0 ms-2" >Agenda</p>
                  </div>
 
@@ -54,6 +54,7 @@ $task = $tasks->getTasks(2, $_GET['date'] ?? date('Y-m-d'));
 
                             <form action="app/routes/taskRoutes.php?action=update" method="POST" id="edit-form-<?= $tasks['id'] ?>" style="display:none">
     <span class="task-description-edit d-flex align-items-start" >
+        
         <input type="text" class="form-control-plaintext w-100 flex-grow-1 ms-0 me-0" value="<?= $tasks['description'] ?>" name="edit-text">
         <input type="hidden" name="taskId" value="<?= $tasks['id'] ?>">
         <button type="submit" class="btn btn-success rounded-circle ms-2">
@@ -86,6 +87,7 @@ $task = $tasks->getTasks(2, $_GET['date'] ?? date('Y-m-d'));
 
             <form action="app/routes/taskRoutes.php?action=add" method="post" class="task-form">
                 <div class="control-buttons">
+                <input type="hidden" name="taskDate" value="<?= $_GET['date'] ?? date('Y-m-d') ?>">
                     <input type="text" id="taskInput" class="form-control mb-2" placeholder="Digite sua tarefa..."
                         oninput="toggleAddCancelButtons(this)" name="description" autofocus>
                     <button type="submit" class="btn btn-success" id="addButton"><i
