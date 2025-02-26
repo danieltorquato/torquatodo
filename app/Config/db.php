@@ -3,7 +3,7 @@ class Db {
     private $host = 'localhost';
     private $dbname = 'agenda';
     private $username = 'root';
-    private $password = 'Daaniell992312!';
+    private $password = 'danielsprod!';
     private $pdo;
 
     public function __construct() {
