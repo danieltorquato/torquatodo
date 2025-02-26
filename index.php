@@ -1,4 +1,9 @@
 <?php
+session_start();
+if (!isset($_SESSION['user_id'])) {
+    header("Location: login.php");
+    exit();
+}
 require_once 'app/Controllers/taskController.php';
 $tasks = new TaskController();
 $task = $tasks->getTasks(2, $_GET['date'] ?? date('Y-m-d'));
