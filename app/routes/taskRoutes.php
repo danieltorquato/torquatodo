@@ -4,26 +4,17 @@ require_once __DIR__ . '/../Controllers/taskController.php';
 class TaskRouter {
     private $taskController;
 
-    public $data;
     public function __construct() {
-       
+        $this->taskController = new TaskController();
+
         $action = $_GET['action'] ?? null;
 
         switch ($action) {
-            case 'read': // Ler as tarefas
-                if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-                    
-                    $input = file_get_contents("php://input");
-                    $this->data = json_decode($input, true);
-                    header("Location: ../../index.php");
-                   
-                } else {
-                    echo json_encode(["error" => "Método não permitido"]);
-                }
-                break;
             case 'add': // Adicionar uma nova tarefa
                 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-                    $this->taskController->addTask();
+                
+                    $selectedDate = $_POST['currentDate'];
+                    $this->taskController->addTask($selectedDate);
                 } else {
                     echo json_encode(["error" => "Método não permitido"]);
                 }
@@ -50,14 +41,9 @@ class TaskRouter {
                 }
                 break;
             default:
-                echo json_encode(["error" => "Ação inválida"]);
+                return;
         }
     }
-
-       
-        public function getTaskDate() {
-        return $this->data;
-    }
 }
-
+$taskRouter = new TaskRouter();
 ?>

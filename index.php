@@ -1,8 +1,9 @@
 <?php
 require_once 'app/Controllers/taskController.php';
 $tasks = new TaskController();
-$task_date = $tasks->getTaskDate();
-$task = $tasks->getTasks($task_date) ?? [];
+$task = $tasks->getTasks(2, $_GET['date'] ?? date('Y-m-d'));
+
+
 
 ?>
 <!DOCTYPE html>
@@ -13,6 +14,8 @@ $task = $tasks->getTasks($task_date) ?? [];
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Agenda</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
     <link rel="stylesheet" href="public/assets/style.css">
 
 </head>
@@ -30,7 +33,7 @@ $task = $tasks->getTasks($task_date) ?? [];
                      <p class="mt-0 ms-2" >Agenda</p>
                  </div>
 
-               <div class="col"> <input type="date" class="form-control font-weight-bold currentDate " id="currentDate" value="<?= $task_date?>" style="float:right">
+               <div class="col"> <form method="get" action=""><input type="date" class="form-control font-weight-bold currentDate " name="currentDate" id="currentDate"  value="<?= $_GET['date'] ?? date('Y-m-d') ?>" style="float:right"  onchange="window.location.href='index.php?date=' + this.value"> </form>
 
                </div>
               
@@ -132,33 +135,13 @@ $task = $tasks->getTasks($task_date) ?? [];
 
     <script>
 
-       
-       
-document.getElementById("currentDate").addEventListener("change", function() {
-    let selectedDate = this.value; // Captura a data selecionada
-    console.log("Data selecionada:", selectedDate);
-    fetch("app/routes/taskRoutes.php?action=read", {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json"
-        },
-        body: JSON.stringify({ selectedDate: selectedDate })  // Passa a data no corpo da requisição
-    })
-    .then(response => response.json())  // Converte a resposta para JSON
-    .then(data => {
-        console.log('Tarefas recebidas:', data);  // Exibe as tarefas recebidas
-    })
-    .catch(error => {
-        console.error('Erro ao buscar as tarefas:', error);  // Exibe o erro no console
-    });
-});
-
-
 
         const taskList = document.getElementById('taskList');
         const taskInput = document.getElementById('taskInput');
         const addButton = document.getElementById('addButton');
         const cancelButton = document.getElementById('cancelButton');
+
+        
 
         function editTask(taskId) {
  
