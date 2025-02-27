@@ -1,6 +1,8 @@
 <?php
 require_once 'app/routes/taskRoutes.php';
-session_start();
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
 if (!isset($_SESSION['user_id'])) {
     header("Location: app/Views/login/login.php");
     exit();
@@ -26,36 +28,26 @@ $task= $taskRouter->task;
     <div class="container">
         <div class="notebook">
            
-           <div class="header row">
-
-                 <div class="col title-name mx-1">
-                 
-                  
-                 
-                 <div class="user-info row"><div class="col me-0">
-    <img src="https://img.freepik.com/vetores-premium/pictograma-de-uma-pessoa_764382-14126.jpg" class="user-image me-0" alt="user">
-                 </div>
-                 <div class="col">
-                    <p class="mt-3 me-0"><?= $_SESSION['user_firstname'] ?></p>
-                 </div>
-   <div class="col">  
+        <div class="header row align-items-center">
+    <div class="col-12 col-md-6 d-flex align-items-center justify-content-start">
+        <div class="user-info d-flex align-items-center me-3">
+            <img src="<?= $_SESSION['user_img']?>" class="user-image rounded-circle" alt="user">
+            <p class="user-name mb-0 ms-2"><?= $_SESSION['user_firstname'] ?></p>
+        </div>
         <form action="app/routes/authRoutes.php?action=logout" method="post">
-            <button type="submit" class="btn">
-                <i class="fa-regular fa-circle-check"></i>
+            <button type="submit" class="btn btn-logout rounded-circle">
+                <i class="fa-solid fa-sign-out"></i>
             </button>
         </form>
     </div>
 
-
-
+    <div class="col-12 col-md-6 d-flex justify-content-end">
+        <form method="get" action="" class="d-flex align-items-center">
+            <input type="date" class="form-control currentDate" name="currentDate" id="currentDate" value="<?= $_GET['date'] ?? date('Y-m-d') ?>" onchange="window.location.href='index.php?date=' + this.value">
+        </form>
+    </div>
 </div>
-                 </div>
 
-               <div class="col"> <form method="get" action=""><input type="date" class="form-control font-weight-bold currentDate " name="currentDate" id="currentDate"  value="<?= $_GET['date'] ?? date('Y-m-d') ?>" style="float:right"  onchange="window.location.href='index.php?date=' + this.value"> </form>
-
-               </div>
-              
-           </div>
             <div id="taskList">
                 <?php
                 foreach ($task as $tasks):
@@ -240,7 +232,7 @@ $task= $taskRouter->task;
                 'Família': ['familia1.jpg', 'familia2.jpg'],
                 'Saúde': ['saude1.jpg', 'saude2.jpg'],
                 'Finanças': ['financas1.jpg', 'financas2.jpg'],
-                'Daniel': ['daniel1.jpg', 'daniel2.jpg']
+                'Daniel': ['daniel1.jpg', 'daniel2.jpg',]
             };
 
             const randomTip = tips[reason][Math.floor(Math.random() * tips[reason].length)];

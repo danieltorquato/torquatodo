@@ -15,6 +15,7 @@ class AuthController{
         $_SESSION['user_id'] = $user['id'];
         $_SESSION['user_user'] = $user['user'];
         $_SESSION['user_firstname'] = $user['first_name'];
+        $_SESSION['user_img'] = $user['img'];
         header('Location: ../../index.php');
         exit();
     }else{

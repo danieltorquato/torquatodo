@@ -52,14 +52,15 @@ public $task_date_test;
     {
         return $this->task_date;
     }
-    public function addTask($taskDate, $description)
+    public function addTask($id, $taskDate, $description)
     {
       
         if ($description) {
             try {
                 $this->pdo->beginTransaction();
-                $query = $this->pdo->prepare('INSERT INTO tasks (user_id, description, completed, created_at, completed_at, task_date ) VALUES (2, ?,0, NOW(), NOW(), ?)');
+                $query = $this->pdo->prepare('INSERT INTO tasks (user_id, description, completed, created_at, completed_at, task_date ) VALUES (?, ?,0, NOW(), NOW(), ?)');
                 $query->execute([
+                    $id,
                     $description,
                     $taskDate
                 ]);
