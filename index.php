@@ -1,15 +1,11 @@
 <?php
+require_once 'app/routes/taskRoutes.php';
 session_start();
 if (!isset($_SESSION['user_id'])) {
-    header("Location: login.php");
+    header("Location: app/Views/login/login.php");
     exit();
 }
-require_once 'app/Controllers/taskController.php';
-$tasks = new TaskController();
-$task = $tasks->getTasks(2, $_GET['date'] ?? date('Y-m-d'));
-
-
-
+$task= $taskRouter->task;
 ?>
 <!DOCTYPE html>
 <html lang="pt-br">
@@ -28,14 +24,31 @@ $task = $tasks->getTasks(2, $_GET['date'] ?? date('Y-m-d'));
 <body>
 
     <div class="container">
-
         <div class="notebook">
            
            <div class="header row">
 
                  <div class="col title-name mx-1">
-                 <h4 class="mb-0"><?= $_GET['date'] ?? date('d-m-Y') ?> <!-- Aqui vai ser o nome --></h4>
-                     <p class="mt-0 ms-2" >Agenda</p>
+                 
+                  
+                 
+                 <div class="user-info row"><div class="col me-0">
+    <img src="https://img.freepik.com/vetores-premium/pictograma-de-uma-pessoa_764382-14126.jpg" class="user-image me-0" alt="user">
+                 </div>
+                 <div class="col">
+                    <p class="mt-3 me-0"><?= $_SESSION['user_firstname'] ?></p>
+                 </div>
+   <div class="col">  
+        <form action="app/routes/authRoutes.php?action=logout" method="post">
+            <button type="submit" class="btn">
+                <i class="fa-regular fa-circle-check"></i>
+            </button>
+        </form>
+    </div>
+
+
+
+</div>
                  </div>
 
                <div class="col"> <form method="get" action=""><input type="date" class="form-control font-weight-bold currentDate " name="currentDate" id="currentDate"  value="<?= $_GET['date'] ?? date('Y-m-d') ?>" style="float:right"  onchange="window.location.href='index.php?date=' + this.value"> </form>
@@ -95,9 +108,9 @@ $task = $tasks->getTasks(2, $_GET['date'] ?? date('Y-m-d'));
                 <input type="hidden" name="taskDate" value="<?= $_GET['date'] ?? date('Y-m-d') ?>">
                     <input type="text" id="taskInput" class="form-control mb-2" placeholder="Digite sua tarefa..."
                         oninput="toggleAddCancelButtons(this)" name="description" autofocus>
-                    <button type="submit" class="btn btn-success" id="addButton"><i
+                    <button type="submit" class="btn btn-success btn-control" id="addButton"><i
                             class="fa-solid fa-plus"></i></button>
-                    <button type="reset" class="btn btn-danger" id="cancelButton" onclick="clearInput()"><i
+                    <button type="reset" class="btn btn-danger btn-control" id="cancelButton" onclick="clearInput()"><i
                             class="fa-solid fa-xmark"></i></button>
                 </div>
             </form>

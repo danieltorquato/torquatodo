@@ -1,7 +1,7 @@
-RewriteEngine On
-RewriteBase /
-
 # Redireciona tudo que não seja arquivo ou diretório para index.php
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
 RewriteRule ^(.+)$ index.php?url=$1 [QSA,L]
+RewriteEngine On
+RewriteBase /agenda/
+RewriteRule ^login$ views/login.php [L]

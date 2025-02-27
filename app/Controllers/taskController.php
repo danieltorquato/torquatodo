@@ -21,7 +21,6 @@ public $task_date_test;
         $db = new Db();
         $task = new Task($this->table, $this->task_date, $this->task, 2);
         $this->pdo = $db->getConnection();
-        $this->task = $task->getTask();
         $this->table = $task->getTable();
         $this->task_date = $task->getTaskDate();
         $this->user = $task->getUser();
@@ -38,7 +37,8 @@ public $task_date_test;
             $selectedDate
         ]);
         if ($find->rowCount() > 0) {
-            $this->task = $find->fetchAll(PDO::FETCH_ASSOC);
+            $this->task = $find->fetchAll(PDO::FETCH_ASSOC); 
+     
             return $this->task;
         }else{
           
