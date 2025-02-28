@@ -1,10 +1,13 @@
 <?php
-require_once 'app/Controllers/taskController.php';
-$tasks = new TaskController();
-$task = $tasks->getTasks(2, $_GET['date'] ?? date('Y-m-d'));
-
-
-
+require_once 'app/routes/taskRoutes.php';
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
+if (!isset($_SESSION['user_id'])) {
+    header("Location: app/Views/login/login.php");
+    exit();
+}
+$task= $taskRouter->task;
 ?>
 <!DOCTYPE html>
 <html lang="pt-br">
@@ -23,21 +26,28 @@ $task = $tasks->getTasks(2, $_GET['date'] ?? date('Y-m-d'));
 <body>
 
     <div class="container">
-
         <div class="notebook">
            
-           <div class="header row">
+        <div class="header row align-items-center">
+    <div class="col-12 col-md-6 d-flex align-items-center justify-content-start">
+        <div class="user-info d-flex align-items-center me-3">
+            <img src="<?= $_SESSION['user_img']?>" class="user-image rounded-circle" alt="user">
+            <p class="user-name mb-0 ms-2"><?= $_SESSION['user_firstname'] ?></p>
+        </div>
+        <form action="app/routes/authRoutes.php?action=logout" method="post">
+            <button type="submit" class="btn btn-logout rounded-circle">
+                <i class="fa-solid fa-sign-out"></i>
+            </button>
+        </form>
+    </div>
 
-                 <div class="col title-name mx-1">
-                     <h4 class="mb-0 "><?$task_date?> <!--aqui vai ser o nome-->Ariane </h4>
-                     <p class="mt-0 ms-2" >Agenda</p>
-                 </div>
+    <div class="col-12 col-md-6 d-flex justify-content-end">
+        <form method="get" action="" class="d-flex align-items-center">
+            <input type="date" class="form-control currentDate" name="currentDate" id="currentDate" value="<?= $_GET['date'] ?? date('Y-m-d') ?>" onchange="window.location.href='index.php?date=' + this.value">
+        </form>
+    </div>
+</div>
 
-               <div class="col"> <form method="get" action=""><input type="date" class="form-control font-weight-bold currentDate " name="currentDate" id="currentDate"  value="<?= $_GET['date'] ?? date('Y-m-d') ?>" style="float:right"  onchange="window.location.href='index.php?date=' + this.value"> </form>
-
-               </div>
-              
-           </div>
             <div id="taskList">
                 <?php
                 foreach ($task as $tasks):
@@ -54,6 +64,7 @@ $task = $tasks->getTasks(2, $_GET['date'] ?? date('Y-m-d'));
 
                             <form action="app/routes/taskRoutes.php?action=update" method="POST" id="edit-form-<?= $tasks['id'] ?>" style="display:none">
     <span class="task-description-edit d-flex align-items-start" >
+        
         <input type="text" class="form-control-plaintext w-100 flex-grow-1 ms-0 me-0" value="<?= $tasks['description'] ?>" name="edit-text">
         <input type="hidden" name="taskId" value="<?= $tasks['id'] ?>">
         <button type="submit" class="btn btn-success rounded-circle ms-2">
@@ -86,19 +97,21 @@ $task = $tasks->getTasks(2, $_GET['date'] ?? date('Y-m-d'));
 
             <form action="app/routes/taskRoutes.php?action=add" method="post" class="task-form">
                 <div class="control-buttons">
+                <input type="hidden" name="taskDate" value="<?= $_GET['date'] ?? date('Y-m-d') ?>">
                     <input type="text" id="taskInput" class="form-control mb-2" placeholder="Digite sua tarefa..."
                         oninput="toggleAddCancelButtons(this)" name="description" autofocus>
-                    <button type="submit" class="btn btn-success" id="addButton"><i
+                    <button type="submit" class="btn btn-success btn-control" id="addButton"><i
                             class="fa-solid fa-plus"></i></button>
-                    <button type="reset" class="btn btn-danger" id="cancelButton" onclick="clearInput()"><i
+                    <button type="reset" class="btn btn-danger btn-control" id="cancelButton" onclick="clearInput()"><i
                             class="fa-solid fa-xmark"></i></button>
                 </div>
             </form>
         </div>
 
         <div class="bottom">
+            <?php if($_SESSION['user_level'] === 'couple' || $_SESSION['user_level'] === 'admin'): ?>
             <button class="btn btn-danger stress-button-danger" onclick="openPopup()">😤 Botão do Estresse</button>
-
+            <?php endif; ?>
             <div for="humor">
                 <h5>Como está seu humor?</h5>
                 <select class="form-control d-inline" style="width: auto;">
@@ -220,7 +233,7 @@ $task = $tasks->getTasks(2, $_GET['date'] ?? date('Y-m-d'));
                 'Família': ['familia1.jpg', 'familia2.jpg'],
                 'Saúde': ['saude1.jpg', 'saude2.jpg'],
                 'Finanças': ['financas1.jpg', 'financas2.jpg'],
-                'Daniel': ['daniel1.jpg', 'daniel2.jpg']
+                'Daniel': ['daniel1.jpg', 'daniel2.jpg',]
             };
 
             const randomTip = tips[reason][Math.floor(Math.random() * tips[reason].length)];

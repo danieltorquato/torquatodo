@@ -21,7 +21,6 @@ public $task_date_test;
         $db = new Db();
         $task = new Task($this->table, $this->task_date, $this->task, 2);
         $this->pdo = $db->getConnection();
-        $this->task = $task->getTask();
         $this->table = $task->getTable();
         $this->task_date = $task->getTaskDate();
         $this->user = $task->getUser();
@@ -38,7 +37,8 @@ public $task_date_test;
             $selectedDate
         ]);
         if ($find->rowCount() > 0) {
-            $this->task = $find->fetchAll(PDO::FETCH_ASSOC);
+            $this->task = $find->fetchAll(PDO::FETCH_ASSOC); 
+     
             return $this->task;
         }else{
           
@@ -52,22 +52,22 @@ public $task_date_test;
     {
         return $this->task_date;
     }
-    public function addTask($taskDate)
+    public function addTask($id, $taskDate, $description)
     {
-        $taskDate = $_GET['date'];
-        $this->task_date = $taskDate;
-        $description = filter_input(INPUT_POST, 'description', FILTER_SANITIZE_STRING);
+      
         if ($description) {
             try {
                 $this->pdo->beginTransaction();
-                $query = $this->pdo->prepare('INSERT INTO tasks (user_id, description, completed, created_at, completed_at, task_date ) VALUES (2, ?,0, NOW(), NOW(), ?)');
+                $query = $this->pdo->prepare('INSERT INTO tasks (user_id, description, completed, created_at, completed_at, task_date ) VALUES (?, ?,0, NOW(), NOW(), ?)');
                 $query->execute([
+                    $id,
                     $description,
                     $taskDate
                 ]);
                 $this->pdo->commit();
+                header("Location: ../../index.php?date=" . $taskDate); // Redireciona para a data correta
+
                 echo "Cadastro realizado com sucesso!";
-                header("Location: ../../index.php");
             } catch (Exception $e) {
                 $this->pdo->rollBack();
                 echo "Erro ao cadastrar usuário: " . $e->getMessage();

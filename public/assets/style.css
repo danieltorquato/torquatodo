@@ -58,6 +58,19 @@ body {
 .btn-edit:hover{
 transform: scale(1.1);
 }
+.btn-control{
+    border-radius: 100px; 
+    cursor: pointer;
+    transition: 0.3s;
+
+}
+.user-image{
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    margin-right: 10px;
+
+}
 .hidden {
     visibility: hidden;
 }   
@@ -196,4 +209,68 @@ transform: scale(1.1);
     .caderno::placeholder {
         color: rgba(0, 0, 0, 0.6);
         font-style: italic;
+    }
+    
+    .user-info {
+        display: flex;
+        align-items: center;
+     
+        /* padding: 8px 15px;
+        border-radius: 5px; */
+       
+    }
+    
+    .user-image {
+        width: 40px;
+        height: 40px;
+        object-fit: cover;
+    }
+    
+    .user-name {
+        font-size: 1.1rem;
+        font-weight: bold;
+        color: #333;
+        margin-left: 10px; /* Ajustando o espaçamento entre imagem e nome */
+    }
+    
+    .btn-logout {
+        background-color: #d2691e6b;
+        color: black;
+        border: 2px solid transparent;
+        padding: 10px;
+      font-size: 11px;
+        transition: background-color 0.3s ease, border 0.3s ease;
+        /* margin-left: 15px; */
+        border-radius: 8px;
+        position: relative;
+    }
+    
+    
+    .btn-logout:hover {
+        background-color: #d2691ec0;
+    }
+    
+    .btn-logout i {
+        color: black;
+     
+    }
+    
+    .currentDate {
+        max-width: 200px;
+        font-weight: bold;
+    }
+    
+    @media (max-width: 576px) {
+        .header {
+            flex-direction: column;
+            align-items: center;
+        }
+    
+        .user-info {
+            margin-bottom: 10px;
+        }
+    
+        .currentDate {
+            margin-top: 10px;
+        }
     }
