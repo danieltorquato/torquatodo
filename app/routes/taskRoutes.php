@@ -31,7 +31,9 @@ class TaskRouter {
 
             case 'complete':
                 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-                    $this->taskController->completedTask();
+                    $taskDate = $_POST['taskDate'] ?? date('Y-m-d');
+                    $this->taskController->completedTask($taskDate);
+                     header("Location: ../../index.php?date=" . $taskDate);
                 } else {
                     echo json_encode(["error" => "Método não permitido"]);
                 }
@@ -39,7 +41,9 @@ class TaskRouter {
 
             case 'delete':
                 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-                    $this->taskController->deleteTask();
+                    $taskDate = $_POST['taskDate'] ?? date('Y-m-d');
+                    $this->taskController->deleteTask($taskDate);
+                     header("Location: ../../index.php?date=" . $taskDate);
                 } else {
                     echo json_encode(["error" => "Método não permitido"]);
                 }
@@ -47,7 +51,9 @@ class TaskRouter {
 
             case 'update':
                 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-                    $this->taskController->editTask();
+                    $taskDate = $_POST['taskDate'] ?? date('Y-m-d');
+                    $this->taskController->editTask($taskDate);
+                     header("Location: ../../index.php?date=" . $taskDate);
                 } else {
                     echo json_encode(["error" => "Método não permitido"]);
                 }

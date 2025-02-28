@@ -54,6 +54,7 @@ $task= $taskRouter->task;
                     ?> <span class="task gap-0">
                         <?php if ($tasks['completed'] == 0): ?>
                             <form action="app/routes/taskRoutes.php?action=complete" method="post">
+                                <input type="hidden" name="taskDate" value="<?= $_GET['date'] ?? date('Y-m-d') ?>">
                                 <button type="submit" class="btn btn-link me-4" name="taskId" value="<?= $tasks['id'] ?>"><i
                                         class="fa-regular fa-circle-check"></i></button>
                             </form>
@@ -66,6 +67,7 @@ $task= $taskRouter->task;
     <span class="task-description-edit d-flex align-items-start" >
         
         <input type="text" class="form-control-plaintext w-100 flex-grow-1 ms-0 me-0" value="<?= $tasks['description'] ?>" name="edit-text">
+        <input type="hidden" name="taskDate" value="<?= $_GET['date'] ?? date('Y-m-d') ?>">
         <input type="hidden" name="taskId" value="<?= $tasks['id'] ?>">
         <button type="submit" class="btn btn-success rounded-circle ms-2">
             <i class="fa-solid fa-check"></i>
@@ -80,10 +82,12 @@ $task= $taskRouter->task;
                             <button class="btn btn-link ms-3" id="btn-edit-task-<?= $tasks['id']?> btn-link-edit-task" onclick="editTask(<?= $tasks['id']?>)"><i class="fa-regular fa-pen-to-square"></i></button>
 
                             <button type="button" class="btn btn-link ms-2" name="taskId" value="<?= $tasks['id'] ?>"
-                                onclick="deleteTask(<?= $tasks['id'] ?>)"><i class="fa-regular fa-trash-can"></i></button>
+                                onclick="deleteTask(<?= $tasks['id'] ?>)"><i class="fa-regular fa-trash-can"></i>
+                                <input type="hidden" name="taskDate" value="<?= $_GET['date'] ?? date('Y-m-d') ?>"></button>
 
                             <form id="deleteTaskForm" action="app/routes/taskRoutes.php?action=delete" method="post"
                                 style="display: none;">
+                                <input type="hidden" name="taskDate" value="<?= $_GET['date'] ?? date('Y-m-d') ?>">
                                 <input type="hidden" name="taskId" id="deleteTaskId">
                             </form>
                         <?php elseif ($tasks['completed'] == 1): ?>
@@ -109,9 +113,10 @@ $task= $taskRouter->task;
         </div>
 
         <div class="bottom">
-            <?php if($_SESSION['user_level'] === 'couple' || $_SESSION['user_level'] === 'admin'): ?>
+             <?php if($_SESSION['user_level'] === 'couple' || $_SESSION['user_level'] === 'admin'): ?>
             <button class="btn btn-danger stress-button-danger" onclick="openPopup()">😤 Botão do Estresse</button>
             <?php endif; ?>
+
             <div for="humor">
                 <h5>Como está seu humor?</h5>
                 <select class="form-control d-inline" style="width: auto;">
@@ -147,6 +152,57 @@ $task= $taskRouter->task;
     </div>
 
     <script>
+document.addEventListener("DOMContentLoaded", function () {
+    const selectHumor = document.querySelector("select");
+    const body = document.body;
+    const overlay = document.createElement("div");
+
+    // Criar um overlay escuro para o efeito de "Cansado"
+    overlay.id = "dark-overlay";
+    document.body.appendChild(overlay);
+
+    // Mapeamento de cores por humor
+    const coresHumor = {
+        "😀 Feliz": {
+            primary: "rgba(255, 223, 105, 0.4)", // Amarelo suave
+            secondary: "rgba(255, 243, 200, 0.3)", // Bege claro
+            overlayOpacity: "0", // Sem escurecimento
+        },
+        "😐 Neutro": {
+            primary: "rgba(200, 200, 200, 0.4)", // Cinza neutro
+            secondary: "rgba(230, 230, 230, 0.3)", // Cinza mais claro
+            overlayOpacity: "0",
+        },
+        "😟 Triste": {
+            primary: "rgba(100, 149, 237, 0.3)", // Azul suave
+            secondary: "rgba(200, 220, 250, 0.2)", // Azul acinzentado
+            overlayOpacity: "0",
+        },
+        "😡 Irritado": {
+            primary: "rgba(255, 99, 71, 0.3)", // Vermelho tomate
+            secondary: "rgba(255, 180, 180, 0.2)", // Rosa avermelhado
+            overlayOpacity: "0",
+        },
+        "😴 Cansado": {
+            primary: "rgba(80, 50, 120, 0.3)", // Roxo escuro suave
+            secondary: "rgba(50, 30, 80, 0.2)", // Lilás escuro
+            overlayOpacity: "0.3", // Agora escurece menos
+        }
+    };
+
+    // Evento para mudança de cor ao selecionar um humor
+    selectHumor.addEventListener("change", function () {
+        const humorSelecionado = selectHumor.value;
+        const cores = coresHumor[humorSelecionado] || coresHumor["😐 Neutro"];
+
+        body.style.setProperty("--primary-color", cores.primary);
+        body.style.setProperty("--secondary-color", cores.secondary);
+        overlay.style.opacity = cores.overlayOpacity;
+    });
+
+    // Dispara a mudança inicial caso já tenha um humor selecionado
+    selectHumor.dispatchEvent(new Event("change"));
+});
 
 
         const taskList = document.getElementById('taskList');
@@ -270,7 +326,15 @@ $task= $taskRouter->task;
             selectedButton.disabled = true;
         }
 
-        document.querySelector('.stress-button-danger').addEventListener('click', openPopup);
+        document.addEventListener("DOMContentLoaded", function () {
+    const stressButton = document.querySelector(".stress-button-danger");
+    
+    if (stressButton) {
+        stressButton.addEventListener("click", openPopup);
+    } else {
+        console.error("O botão .stress-button-danger não foi encontrado.");
+    }
+});
     </script>
     <script src="https://kit.fontawesome.com/1f3d33bbf2.js" crossorigin="anonymous"></script>
 </body>

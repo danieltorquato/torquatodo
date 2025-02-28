@@ -28,13 +28,13 @@ public $task_date_test;
        
     }
 
-    public function getTasks($user, $selectedDate) {
+    public function getTasks($user, $taskDate) {
               
         $query = 'SELECT * FROM tasks WHERE user_id=? AND task_date=?';
         $find = $this->pdo->prepare($query);
         $find->execute([
             $user,
-            $selectedDate
+            $taskDate
         ]);
         if ($find->rowCount() > 0) {
             $this->task = $find->fetchAll(PDO::FETCH_ASSOC); 
@@ -75,7 +75,7 @@ public $task_date_test;
 
         }
     }
-    public function editTask()
+    public function editTask($taskDate)
     {
         $taskEdit = filter_input(INPUT_POST, 'edit-text');
         $taskId = filter_input(INPUT_POST, 'taskId', FILTER_SANITIZE_NUMBER_INT);
@@ -91,14 +91,14 @@ public $task_date_test;
                 ]);
                 $this->pdo->commit();
                 echo "Cadastro atualizado com sucesso!";
-                header("Location: ../../index.php");
+                header("Location: ../../index.php?date=" . $taskDate); // Redireciona para a data correta
             } catch (Exception $e) {
                 $this->pdo->rollBack();
                 echo 'Não foi possível atualizar: ' . $e->getMessage();
             }
         }
     }
-    public function completedTask()
+    public function completedTask($taskDate)
     {
         $taskId = filter_input(INPUT_POST, 'taskId', FILTER_SANITIZE_NUMBER_INT);
         if ($taskId) {
@@ -109,7 +109,7 @@ public $task_date_test;
                     $taskId
                 ]);
                 $this->pdo->commit();
-                header("Location: ../../index.php");
+               header("Location: index.php?date=" . $taskDate); // Redireciona para a data correta
             } catch (Exception $e) {
                 $this->pdo->rollBack();
                 echo 'Erro ao completar tarefa: ' . $e->getMessage();
@@ -117,7 +117,7 @@ public $task_date_test;
 
         }
     }
-    public function deleteTask()
+    public function deleteTask($taskDate)
     {
         $taskId = filter_input(INPUT_POST, 'taskId', FILTER_SANITIZE_NUMBER_INT);
         if ($taskId) {
@@ -128,7 +128,7 @@ public $task_date_test;
                     $taskId
                 ]);
                 $this->pdo->commit();
-                header("Location: ../../index.php");
+                header("Location: ../../index.php?date=" . $taskDate); // Redireciona para a data correta
             } catch (Exception $e) {
                 echo 'Erro ao deletar :' . $e->getMessage();
             }
@@ -137,7 +137,4 @@ public $task_date_test;
 
 }
 $tasks = new TaskController();
-// $selectedDate = filter_input(INPUT_POST, 'currentDate', FILTER_SANITIZE_STRING);
-// $tasksList = $tasks->getTasks(2, '2025-02-25');
-// var_dump($tasksList);
 ?>
