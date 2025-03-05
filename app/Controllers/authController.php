@@ -30,5 +30,19 @@ class AuthController{
     header('Location: ../../index.php');
     exit();
    }
+   public function register($name, $surname, $user,  $email, $password){
+    $result = $this->userModel->registerUser($name, $surname, $user, $email, $password);
+
+
+    if ($result === true) {
+        echo "Cadastro realizado com sucesso!";
+        header("Location: ../Views/login/login.php");
+        exit();
+    } else {
+        echo $result; 
+    }
+
+
+   }
 }
 ?>

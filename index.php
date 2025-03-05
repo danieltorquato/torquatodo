@@ -42,6 +42,10 @@ $task= $taskRouter->task;
     </div>
 
     <div class="col-12 col-md-6 d-flex justify-content-end">
+    <div class="form-check form-switch">
+    <input class="form-check-input custom-checkbox" type="checkbox" id="toggleFont">
+    <label class="form-check-label label-notebook" for="toggleFont">Modo agenda</label>
+</div>
         <form method="get" action="" class="d-flex align-items-center">
             <input type="date" class="form-control currentDate" name="currentDate" id="currentDate" value="<?= $_GET['date'] ?? date('Y-m-d') ?>" onchange="window.location.href='index.php?date=' + this.value">
         </form>
@@ -333,6 +337,13 @@ document.addEventListener("DOMContentLoaded", function () {
         stressButton.addEventListener("click", openPopup);
     } else {
         console.error("O botão .stress-button-danger não foi encontrado.");
+    }
+});
+document.getElementById("toggleFont").addEventListener("change", function () {
+    let notebook = document.querySelector('.notebook');
+    
+    if (notebook) {
+        notebook.classList.toggle("default-font");
     }
 });
     </script>

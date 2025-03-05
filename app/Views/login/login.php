@@ -26,7 +26,7 @@
                 <button type="submit" class="btn btn-primary">Entrar</button>
             </form>
             <div class="footer">
-                <p>Não tem uma conta? <a href="/register">Cadastre-se</a></p>
+                <p>Não tem uma conta? <a href="../register/register.php">Cadastre-se</a></p>
             </div>
         </div>
     </div>

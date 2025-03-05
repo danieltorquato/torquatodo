@@ -14,7 +14,6 @@ body {
     max-width: 500px;
     box-shadow: 0 0 10px rgba(0,0,0,0.1);
     position: relative;
-    font-family: 'Indie Flower', cursive !important;
     font-size: 20px;
     transform: scale(0.9);
 }
@@ -323,4 +322,23 @@ transform: scale(1.1);
         border-color: var(--primary-color);
         outline: none;
     }
+    .custom-checkbox {
+        width: 50px;
+        height: 25px;
+        background-color: #ddd;
+        border-radius: 25px;
+        position: relative;
+        appearance: none;
+        -webkit-appearance: none;
+        cursor: pointer;
+    }
     
+    .custom-checkbox:checked {
+        background-color: #4CAF50;
+    }
+    .default-font {
+        font-family: 'Indie Flower', cursive;
+    }    
+    .label-notebook{
+        font-size: 14px;
+    }
