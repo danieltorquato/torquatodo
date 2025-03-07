@@ -1,6 +1,6 @@
 <?php
 require_once __DIR__ . '/../Controllers/taskController.php';
-session_start(); // Inicia a sessão
+session_start(); 
 class TaskRouter {
     private $taskController;
     public $task;

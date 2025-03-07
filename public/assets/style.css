@@ -189,7 +189,7 @@ transform: scale(1.1);
     display: flex;
     flex-direction: row;
 }
-    /* Estilo do fundo do input e botão */
+
     .caderno-date{
   
         font-size: 20px;
@@ -204,7 +204,7 @@ transform: scale(1.1);
         outline: none;
     }
 
-    /* Efeito de escrita à mão */
+
     .caderno::placeholder {
         color: rgba(0, 0, 0, 0.6);
         font-style: italic;
@@ -213,9 +213,7 @@ transform: scale(1.1);
     .user-info {
         display: flex;
         align-items: center;
-     
-        /* padding: 8px 15px;
-        border-radius: 5px; */
+
        
     }
     
@@ -229,7 +227,7 @@ transform: scale(1.1);
         font-size: 1.1rem;
         font-weight: bold;
         color: #333;
-        margin-left: 10px; /* Ajustando o espaçamento entre imagem e nome */
+        margin-left: 10px; 
     }
     
     .btn-logout {
@@ -239,7 +237,6 @@ transform: scale(1.1);
         padding: 10px;
       font-size: 11px;
         transition: background-color 0.3s ease, border 0.3s ease;
-        /* margin-left: 15px; */
         border-radius: 8px;
         position: relative;
     }
@@ -274,7 +271,7 @@ transform: scale(1.1);
         }
     }
     :root {
-        --primary-color: rgba(200, 200, 200, 0.4); /* Cor neutra padrão */
+        --primary-color: rgba(200, 200, 200, 0.4); 
         --secondary-color: rgba(230, 230, 230, 0.3);
     }
     
@@ -285,28 +282,28 @@ transform: scale(1.1);
         overflow: hidden;
     }
     
-    /* Overlay escuro para efeito "Cansado" */
+
     #dark-overlay {
         position: fixed;
         top: 0;
         left: 0;
         width: 100%;
         height: 100%;
-        background: rgba(0, 0, 0, 0.4); /* Reduz a intensidade do escurecimento */
+        background: rgba(0, 0, 0, 0.4); 
         opacity: 0;
         transition: opacity 0.5s ease-in-out;
-        pointer-events: none; /* Não interfere no clique */
+        pointer-events: none; 
         z-index: 5;
     }
     
-    /* Mantém o notebook mais claro */
+
     .notebook {
-        background: rgba(255, 255, 255, 0.9); /* Deixa o fundo mais visível */
+        background: rgba(255, 255, 255, 0.9); 
         border-radius: 10px;
         padding: 20px;
         box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
         position: relative;
-        z-index: 10; /* Mantém acima do overlay escuro */
+        z-index: 10; 
     }
     
     select {

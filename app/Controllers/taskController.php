@@ -2,9 +2,6 @@
 require_once __DIR__ . '/../Config/db.php';
 require_once __DIR__ . '/../Models/task.php';
 require_once __DIR__ . '/../routes/taskRoutes.php';
-ini_set('display_errors', 1);
-error_reporting(E_ALL);
-
 
 class TaskController {
     private $table;
@@ -65,7 +62,7 @@ public $task_date_test;
                     $taskDate
                 ]);
                 $this->pdo->commit();
-                header("Location: ../../index.php?date=" . $taskDate); // Redireciona para a data correta
+                header("Location: ../../index.php?date=" . $taskDate);
 
                 echo "Cadastro realizado com sucesso!";
             } catch (Exception $e) {
@@ -79,7 +76,7 @@ public $task_date_test;
     {
         $taskEdit = filter_input(INPUT_POST, 'edit-text');
         $taskId = filter_input(INPUT_POST, 'taskId', FILTER_SANITIZE_NUMBER_INT);
-        var_dump($taskEdit, $taskId);  // Adicione essa linha para verificar os dados recebidos
+        var_dump($taskEdit, $taskId); 
 
         if ($taskId) {
             try {
@@ -91,7 +88,7 @@ public $task_date_test;
                 ]);
                 $this->pdo->commit();
                 echo "Cadastro atualizado com sucesso!";
-                header("Location: ../../index.php?date=" . $taskDate); // Redireciona para a data correta
+                header("Location: ../../index.php?date=" . $taskDate);
             } catch (Exception $e) {
                 $this->pdo->rollBack();
                 echo 'Não foi possível atualizar: ' . $e->getMessage();
@@ -109,7 +106,7 @@ public $task_date_test;
                     $taskId
                 ]);
                 $this->pdo->commit();
-               header("Location: index.php?date=" . $taskDate); // Redireciona para a data correta
+               header("Location: index.php?date=" . $taskDate);
             } catch (Exception $e) {
                 $this->pdo->rollBack();
                 echo 'Erro ao completar tarefa: ' . $e->getMessage();
@@ -128,7 +125,7 @@ public $task_date_test;
                     $taskId
                 ]);
                 $this->pdo->commit();
-                header("Location: ../../index.php?date=" . $taskDate); // Redireciona para a data correta
+                header("Location: ../../index.php?date=" . $taskDate); 
             } catch (Exception $e) {
                 echo 'Erro ao deletar :' . $e->getMessage();
             }

@@ -56,7 +56,7 @@ Class AuthRouter{
     }
 }
 
-// Executa o roteador
+
 $router = new AuthRouter();
 $router->handleRequest();
 

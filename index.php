@@ -161,40 +161,39 @@ document.addEventListener("DOMContentLoaded", function () {
     const body = document.body;
     const overlay = document.createElement("div");
 
-    // Criar um overlay escuro para o efeito de "Cansado"
     overlay.id = "dark-overlay";
     document.body.appendChild(overlay);
 
-    // Mapeamento de cores por humor
+
     const coresHumor = {
         "😀 Feliz": {
-            primary: "rgba(255, 223, 105, 0.4)", // Amarelo suave
-            secondary: "rgba(255, 243, 200, 0.3)", // Bege claro
-            overlayOpacity: "0", // Sem escurecimento
+            primary: "rgba(255, 223, 105, 0.4)", 
+            secondary: "rgba(255, 243, 200, 0.3)", 
+            overlayOpacity: "0", 
         },
         "😐 Neutro": {
-            primary: "rgba(200, 200, 200, 0.4)", // Cinza neutro
-            secondary: "rgba(230, 230, 230, 0.3)", // Cinza mais claro
+            primary: "rgba(200, 200, 200, 0.4)", 
+            secondary: "rgba(230, 230, 230, 0.3)", 
             overlayOpacity: "0",
         },
         "😟 Triste": {
-            primary: "rgba(100, 149, 237, 0.3)", // Azul suave
-            secondary: "rgba(200, 220, 250, 0.2)", // Azul acinzentado
+            primary: "rgba(100, 149, 237, 0.3)", 
+            secondary: "rgba(200, 220, 250, 0.2)", 
             overlayOpacity: "0",
         },
         "😡 Irritado": {
-            primary: "rgba(255, 99, 71, 0.3)", // Vermelho tomate
-            secondary: "rgba(255, 180, 180, 0.2)", // Rosa avermelhado
+            primary: "rgba(255, 99, 71, 0.3)", 
+            secondary: "rgba(255, 180, 180, 0.2)", 
             overlayOpacity: "0",
         },
         "😴 Cansado": {
-            primary: "rgba(80, 50, 120, 0.3)", // Roxo escuro suave
-            secondary: "rgba(50, 30, 80, 0.2)", // Lilás escuro
-            overlayOpacity: "0.3", // Agora escurece menos
+            primary: "rgba(80, 50, 120, 0.3)", 
+            secondary: "rgba(50, 30, 80, 0.2)", 
+            overlayOpacity: "0.3", 
         }
     };
 
-    // Evento para mudança de cor ao selecionar um humor
+    
     selectHumor.addEventListener("change", function () {
         const humorSelecionado = selectHumor.value;
         const cores = coresHumor[humorSelecionado] || coresHumor["😐 Neutro"];
@@ -204,7 +203,6 @@ document.addEventListener("DOMContentLoaded", function () {
         overlay.style.opacity = cores.overlayOpacity;
     });
 
-    // Dispara a mudança inicial caso já tenha um humor selecionado
     selectHumor.dispatchEvent(new Event("change"));
 });
 

@@ -17,6 +17,7 @@ class AuthController{
         $_SESSION['user_firstname'] = $user['first_name'];
         $_SESSION['user_img'] = $user['img'];
         $_SESSION['user_level'] = $user['level'];
+        setcookie($_SESSION['user_user'], $user['password'], time() + (86400 * 30), "/");
         header('Location: ../../index.php');
         exit();
     }else{
