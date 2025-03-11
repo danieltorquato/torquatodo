@@ -15,7 +15,7 @@ $task= $taskRouter->task;
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Agenda</title>
+    <title>TorquaTo Do</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
@@ -121,19 +121,63 @@ $task= $taskRouter->task;
             <button class="btn btn-danger stress-button-danger" onclick="openPopup()">😤 Botão do Estresse</button>
             <?php endif; ?>
 
-            <div for="humor">
-                <h5>Como está seu humor?</h5>
-                <input type="button" value="Editar Humor" class="btn">
-                <form id="moodForm" method="POST" hidden>
-    <select id="moodSelect" name="mood" class="form-control d-inline" style="width: auto;">
-        <option value="happy">😀 Feliz</option>
-        <option value="neutro">😐 Neutro</option>
-        <option value="sad">😟 Triste</option>
-        <option value="angry">😡 Irritado</option>
-        <option value="tired">😴 Cansado</option>
-    </select>
-</form>
-            </div>
+            <div for="mood">
+            <?php if($_SESSION['user_mood'] === null  || $_SESSION['user_mood'] === ""): ?>
+            <form action="app/routes/authRoutes.php?action=mood"  id="moodForm" method="POST">
+                   
+                   <input type="hidden" id="moodInput" name="mood">
+                  
+                   </form> 
+   <h5>Como está seu humor?</h5>
+                   <button  data-mood="happy"  class="btn moodBtn">😀 Feliz</button>
+                  <button data-mood="neutral"  class="btn moodBtn">😐 Neutro</button>
+                  <button data-mood="sad" class="btn moodBtn">😟 Triste</button>
+                  <button  data-mood="angry" class="btn moodBtn">😡 Irritado</button>
+                  <button  data-mood="tired"  class="btn moodBtn">😴 Cansado</button>
+                
+               <?php else: ?>
+                <span>
+                    
+                
+                <?php switch ($_SESSION['user_mood']) {
+                    case 'happy':
+                        echo '<span id="moodDesc" class="mood_desc" > Você parece estar: 😀 Feliz</span>';;
+                        break;
+                    case 'neutral':
+                        echo '<span id="moodDesc" class="mood_desc" > Você parece estar: 😐 Neutro</span>';
+                        break;
+                    case 'sad':
+                        echo '<span id="moodDesc" class="mood_desc" > Você parece estar: 😟 Triste</span>';
+                        break;
+                    case 'angry':
+                        echo '<span id="moodDesc" class="mood_desc" > Você parece estar: 😡 Irritado</span>';
+                        break;
+                    case 'tired':
+                        echo '<span id="moodDesc" class="mood_desc" >Você parece estar: 😴 Cansado</span>';
+                        break;
+                    default:
+                        echo 'Humor não selecionado';
+                        break;
+                }?>
+            
+            </span>
+            <div>
+                <input type="button" value="Editar Humor" class="btn" id="editMood">
+                <?php endif;?>
+                </div>
+                <div class="none" id="moodFormContent">
+                    <form action="app/routes/authRoutes.php?action=mood"  id="moodForm" method="POST">
+                   
+                    <input type="hidden" id="moodInput" name="mood">
+                   
+    </form>
+    <h5>Como está seu humor?</h5>
+                    <button  data-mood="happy" name="happy" class="btn moodBtn">😀 Feliz</button>
+                   <button data-mood="neutral" name="neutral" class="btn moodBtn">😐 Neutro</button>
+                   <button data-mood="sad" name="sad" class="btn moodBtn">😟 Triste</button>
+                   <button  data-mood="angry" name="angry" class="btn moodBtn">😡 Irritado</button>
+                   <button  data-mood="tired" name="tired" class="btn moodBtn">😴 Cansado</button>
+                </div>
         </div>
         <div id="stressPopup" class="popup">
             <div class="popup-content">
@@ -157,57 +201,26 @@ $task= $taskRouter->task;
     </div>
 
     <script>
-document.addEventListener("DOMContentLoaded", function () {
-    const selectHumor = document.querySelector("select");
-    const body = document.body;
-    const overlay = document.createElement("div");
-
-    overlay.id = "dark-overlay";
-    document.body.appendChild(overlay);
 
 
-    const coresHumor = {
-        "😀 Feliz": {
-            primary: "rgba(255, 223, 105, 0.4)", 
-            secondary: "rgba(255, 243, 200, 0.3)", 
-            overlayOpacity: "0", 
-        },
-        "😐 Neutro": {
-            primary: "rgba(200, 200, 200, 0.4)", 
-            secondary: "rgba(230, 230, 230, 0.3)", 
-            overlayOpacity: "0",
-        },
-        "😟 Triste": {
-            primary: "rgba(100, 149, 237, 0.3)", 
-            secondary: "rgba(200, 220, 250, 0.2)", 
-            overlayOpacity: "0",
-        },
-        "😡 Irritado": {
-            primary: "rgba(255, 99, 71, 0.3)", 
-            secondary: "rgba(255, 180, 180, 0.2)", 
-            overlayOpacity: "0",
-        },
-        "😴 Cansado": {
-            primary: "rgba(80, 50, 120, 0.3)", 
-            secondary: "rgba(50, 30, 80, 0.2)", 
-            overlayOpacity: "0.3", 
-        }
-    };
 
-    
-    selectHumor.addEventListener("change", function () {
-        const humorSelecionado = selectHumor.value;
-        const cores = coresHumor[humorSelecionado] || coresHumor["😐 Neutro"];
+document.querySelectorAll(".moodBtn").forEach(button => {
+        button.addEventListener("click", function() {
+            document.querySelector("#moodInput").value = this.dataset.mood; // Define o valor no input hidden
+            document.querySelector("#moodForm").submit(); // Submete o formulário automaticamente
 
-        body.style.setProperty("--primary-color", cores.primary);
-        body.style.setProperty("--secondary-color", cores.secondary);
-        overlay.style.opacity = cores.overlayOpacity;
+        });
     });
+    const editMood = document.querySelector("#editMood");
 
-    selectHumor.dispatchEvent(new Event("change"));
+editMood.addEventListener("click", function(){
+    const moodFormContent = document.querySelector("#moodFormContent");
+    const moodDesc = document.querySelector("#moodDesc");
+    moodFormContent.classList.toggle("none");
+    editMood.classList.toggle("none");
+    moodDesc.classList.toggle("none");
+
 });
-
-
         const taskList = document.getElementById('taskList');
         const taskInput = document.getElementById('taskInput');
         const addButton = document.getElementById('addButton');

@@ -45,8 +45,15 @@ public function registerUser($name, $surname, $user, $email, $password){
      }
     
 }
-public function updateMood($mood){
-    
+public function updateMood($id, $mood){
+    $query = $this->pdo->prepare("UPDATE users SET mood = ? WHERE id=?");
+    $query->execute([
+        $mood,
+        $id]
+    );
+    return true;
 }
+
+
 }
 ?>

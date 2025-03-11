@@ -17,6 +17,7 @@ class AuthController{
         $_SESSION['user_firstname'] = $user['first_name'];
         $_SESSION['user_img'] = $user['img'];
         $_SESSION['user_level'] = $user['level'];
+        $_SESSION['user_mood'] = $user['mood'];
         setcookie($_SESSION['user_user'], $user['password'], time() + (86400 * 30), "/");
         header('Location: ../../index.php');
         exit();
@@ -44,6 +45,16 @@ class AuthController{
     }
 
 
+   }
+
+   public function updateMood($id, $mood){
+    $result =   $this->userModel->updateMood($id,$mood);
+    if ($result === true){
+        echo 'Humor atualizado';
+        header('Location: ../../index.php');
+    }else {
+        echo $result;
+    }
    }
 }
 ?>

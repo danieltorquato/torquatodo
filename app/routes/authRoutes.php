@@ -43,12 +43,17 @@ Class AuthRouter{
                 }
                 
                 break;
+               
             case 'mood':
                 if($_SERVER['REQUEST_METHOD'] === 'POST'){
-
+                    $id = $_SESSION['user_id'];
+                    $mood = trim($_POST['mood']);
+                    $_SESSION['user_mood'] = $mood;
+                    $this->authController->updateMood($id, $mood);
                 }
+                break;
             default:
-                $this->errorResponse("Ação inválida!");
+            echo 'Falha no post';
         }
     }
 
