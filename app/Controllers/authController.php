@@ -21,7 +21,7 @@ class AuthController{
         header('Location: ../../index.php');
         exit();
     }else{
-        echo "<script>alert('E-mail ou senha incorretos!'); window.location.href='../Views/login/login.php';</script>";
+        echo "<script>alert('Usuário ou senha ou senha incorretos!'); window.location.href='../Views/login/login.php';</script>";
     }
 
    }

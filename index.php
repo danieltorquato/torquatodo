@@ -47,7 +47,7 @@ $task= $taskRouter->task;
     <label class="form-check-label label-notebook" for="toggleFont">Modo agenda</label>
 </div>
         <form method="get" action="" class="d-flex align-items-center">
-            <input type="date" class="form-control currentDate" name="currentDate" id="currentDate" value="<?= $_GET['date'] ?? date('Y-m-d') ?>" onchange="window.location.href='index.php?date=' + this.value">
+            <input type="date" class="form-control currentDate" name="currentDate" id="currentDate" value="<?= $_GET['date'] ?? date('Y-m-d') ?>" onkeypress="javascript: if(event.keyCode == 13) window.location.href='index.php?date=' + this.value;">
         </form>
     </div>
 </div>
@@ -123,15 +123,16 @@ $task= $taskRouter->task;
 
             <div for="humor">
                 <h5>Como está seu humor?</h5>
-                <select class="form-control d-inline" style="width: auto;">
-
-                    <option>😀 Feliz</option>
-                    <option>😐 Neutro</option>
-                    <option>😟 Triste</option>
-                    <option>😡 Irritado</option>
-                    <option>😴 Cansado</option>
-
-                </select>
+                <input type="button" value="Editar Humor" class="btn">
+                <form id="moodForm" method="POST" hidden>
+    <select id="moodSelect" name="mood" class="form-control d-inline" style="width: auto;">
+        <option value="happy">😀 Feliz</option>
+        <option value="neutro">😐 Neutro</option>
+        <option value="sad">😟 Triste</option>
+        <option value="angry">😡 Irritado</option>
+        <option value="tired">😴 Cansado</option>
+    </select>
+</form>
             </div>
         </div>
         <div id="stressPopup" class="popup">

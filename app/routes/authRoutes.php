@@ -43,7 +43,10 @@ Class AuthRouter{
                 }
                 
                 break;
+            case 'mood':
+                if($_SERVER['REQUEST_METHOD'] === 'POST'){
 
+                }
             default:
                 $this->errorResponse("Ação inválida!");
         }

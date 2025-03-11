@@ -43,7 +43,10 @@ public function registerUser($name, $surname, $user, $email, $password){
      }else{
         echo "Não cadastrado";
      }
-     
+    
+}
+public function updateMood($mood){
+    
 }
 }
 ?>
