@@ -58,6 +58,15 @@ class TaskRouter {
                     echo json_encode(["error" => "Método não permitido"]);
                 }
                 break;
+            case 'uncompleted':
+                if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+                    $taskDate = $_POST['taskDate'] ?? date('Y-m-d');
+                    $this->taskController->uncompletedTask($taskDate);
+                     header("Location: ../../index.php?date=" . $taskDate);
+                } else {
+                    echo json_encode(["error" => "Método não permitido"]);
+                }
+                break;
             default:
            $this->task = $this->taskController->getTasks($_SESSION['user_id'], $_GET['date'] ?? date('Y-m-d'));
              

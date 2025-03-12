@@ -88,14 +88,20 @@ $task= $taskRouter->task;
                             <button type="button" class="btn btn-link ms-2" name="taskId" value="<?= $tasks['id'] ?>"
                                 onclick="deleteTask(<?= $tasks['id'] ?>)"><i class="fa-regular fa-trash-can"></i>
                                 <input type="hidden" name="taskDate" value="<?= $_GET['date'] ?? date('Y-m-d') ?>"></button>
-
+                            
                             <form id="deleteTaskForm" action="app/routes/taskRoutes.php?action=delete" method="post"
                                 style="display: none;">
                                 <input type="hidden" name="taskDate" value="<?= $_GET['date'] ?? date('Y-m-d') ?>">
                                 <input type="hidden" name="taskId" id="deleteTaskId">
                             </form>
                         <?php elseif ($tasks['completed'] == 1): ?>
-                            <p class="completed"><?= $tasks['description'] ?></p>
+                            <button class="btn btn-link me-4" name="taskId" value="<?= $tasks['id'] ?>"  onclick="uncompletedTask(<?= $tasks['id'] ?>)"><i
+                            class="fa-solid fa-circle-check"></i></button> <p class="completed"><?= $tasks['description'] ?></p>
+                          <form action="app/routes/taskRoutes.php?action=uncompleted" method="POST" id="uncompletedTaskForm">
+                          <input type="hidden" name="taskDate" value="<?= $_GET['date'] ?? date('Y-m-d') ?>">
+                               
+                                <input type="hidden" name="taskId" id="uncompletedTaskId">
+                          </form>
                         <?php endif ?>
                     </span>
 
@@ -260,6 +266,13 @@ editMood.addEventListener("click", function(){
             if (confirm('Tem certeza de que deseja deletar esta tarefa?')) {
                 document.getElementById('deleteTaskId').value = taskId;
                 document.getElementById('deleteTaskForm').submit();
+            }
+        }
+
+        function uncompletedTask(taskId){
+            if (confirm('Tem certeza de que não completou esta tarefa?')) {
+                document.getElementById('uncompletedTaskId').value = taskId;
+                document.getElementById('uncompletedTaskForm').submit();
             }
         }
 

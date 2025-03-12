@@ -114,6 +114,23 @@ public $task_date_test;
 
         }
     }
+
+    public function uncompletedTask($taskDate){
+        $taskId = $_POST['taskId'];
+        if ($taskId) {
+        try{
+            $this->pdo->beginTransaction();
+            $query = $this->pdo->prepare('UPDATE tasks SET completed = 0 WHERE id=?');
+            $query->execute([$taskId]);
+            $this->pdo->commit();
+            header("Location: index.php?date=" . $taskDate);
+        }catch (Exception $e) {
+            $this->pdo->rollBack();
+            echo 'Erro ao completar tarefa: ' . $e->getMessage();
+        }
+
+        }
+    }
     public function deleteTask($taskDate)
     {
         $taskId = filter_input(INPUT_POST, 'taskId', FILTER_SANITIZE_NUMBER_INT);
